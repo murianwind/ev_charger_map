@@ -17,6 +17,9 @@ permissions:
 jobs:
   update-status:
     runs-on: [self-hosted, home-pc]
+    # 평소 1~2분이면 끝난다. 걸려 멈춘 실행이 러너를 오래 붙잡지 않게 한다
+    # (기본 상한은 6시간).
+    timeout-minutes: 15
     env:
       EV_SERVICE_KEY: ${{ secrets.EV_SERVICE_KEY }}
       EV_STATUS_PERIOD_MIN: "10"

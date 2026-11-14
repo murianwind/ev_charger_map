@@ -42,6 +42,9 @@ permissions:
 jobs:
   update:
     runs-on: [self-hosted, home-pc]
+    # 기본 상한은 6시간이다. 뭔가에 걸려 멈춘 실행이 하나뿐인 러너를 그만큼
+    # 붙잡으면 그동안 상태 갱신이 전부 밀린다(전체 시드도 1시간이면 끝난다).
+    timeout-minutes: 120
     env:
       EV_SERVICE_KEY: ${{ secrets.EV_SERVICE_KEY }}
       KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}

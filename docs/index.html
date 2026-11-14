@@ -468,12 +468,17 @@ function isWithinRange(nowMinutes, start, end) {
   return nowMinutes >= start || nowMinutes < end;
 }
 
+// 운영시간은 한국 시각 기준이다. 브라우저의 현지 시각을 쓰면 해외에서
+// 접속했을 때 엉뚱한 요일/시각으로 판단하므로, UTC에 9시간을 더한 값을
+// UTC 메서드로 읽어 KST의 요일/시/분을 얻는다.
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
 function isOpenNow(hours) {
   if (!hours || hours.kind === "always" || hours.kind === "unknown") return true;
 
-  const now = new Date();
-  const isWeekend = now.getDay() === 0 || now.getDay() === 6; // 0=일, 6=토
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const now = new Date(Date.now() + KST_OFFSET_MS);
+  const isWeekend = now.getUTCDay() === 0 || now.getUTCDay() === 6; // 0=일, 6=토
+  const nowMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
 
   if (hours.kind === "daily") {
     return isWithinRange(nowMinutes, hours.start, hours.end);
@@ -1007,6 +1012,7 @@ document.getElementById("show-closed-toggle").addEventListener("click", (e) => {
 function formatKstTime(iso) {
   if (!iso) return null;
   return new Date(iso).toLocaleString("ko-KR", {
+    timeZone: "Asia/Seoul",
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -1078,12 +1084,19 @@ function toggleRegionDetail() {
   });
 
   const rows = [...groups.entries()].sort((a, b) => new Date(a[0]) - new Date(b[0]));
-  detailEl.textContent = rows
-    .map(
-      ([time, g]) =>
-        `${g.names.join(", ")} ${formatKstTime(time)} · ${g.count.toLocaleString()}개소`
-    )
-    .join(" / ");
+  const lines = rows.map(
+    ([time, g]) =>
+      `${g.names.join(", ")} ${formatKstTime(time)} · ${g.count.toLocaleString()}개소`
+  );
+  // 갱신에 실패해 다시 받기를 기다리는 지역 — 위 목록의 해당 지역 데이터는
+  // 지난 회차 것이라는 뜻이다.
+  const pendingNames = Object.keys(lastMeta.pendingRegions || {}).map(
+    (zcode) => (lastMeta.regionUpdates[zcode] || {}).name || zcode
+  );
+  if (pendingNames.length > 0) {
+    lines.push(`재시도 대기: ${pendingNames.join(", ")}`);
+  }
+  detailEl.textContent = lines.join(" / ");
   detailEl.classList.remove("hidden");
 }
 

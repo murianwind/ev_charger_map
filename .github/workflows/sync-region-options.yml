@@ -29,11 +29,11 @@ jobs:
       - name: Regenerate region_day options
         run: python scripts/sync_region_day_options.py
 
+      # 10분마다 상태 갱신이 main에 push하므로, 그 사이에 걸리면 push가
+      # 거부된다 — 공용 스크립트가 rebase 후 다시 push한다.
       - name: Commit if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/workflows/update-chargers.yml
-          git diff --cached --quiet && { echo "변경 없음, 커밋 생략"; exit 0; }
-          git commit -m "chore: region_day 드롭다운 옵션 자동 동기화"
-          git push origin HEAD:main
+        run: >
+          scripts/commit_and_push.sh
+          "chore: region_day 드롭다운 옵션 자동 동기화"
+          "python scripts/sync_region_day_options.py"
+          .github/workflows/update-chargers.yml
