@@ -20,7 +20,7 @@ RUNNER_HOME="$(pwd)"
   echo "DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}"
 } > /etc/environment
 
-echo "[scheduler] cron 시작 (10분마다 상태 갱신 워크플로 dispatch, 매일 04:00 KST 지역 갱신 워크플로 dispatch, 5분마다 러너 헬스체크)"
+echo "[scheduler] cron 시작 (10분마다 상태 갱신 워크플로 dispatch, 매일 04:00 KST 지역 갱신 워크플로 dispatch + 04:35~09:35 매시 35분 실패 지역 재시도, 5분마다 러너 헬스체크)"
 cron
 
 echo "[runner] GitHub Actions 러너 시작"

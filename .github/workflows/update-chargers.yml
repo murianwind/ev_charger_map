@@ -7,6 +7,10 @@ on:
         description: "전체 지역을 한 번에 갱신 (전국 데이터 초기 채우기용, 평소엔 체크하지 않음)"
         type: boolean
         default: false
+      retry_pending:
+        description: "재시도 대기 지역만 다시 받기 (홈 스케줄러가 실패 후 자동 재시도할 때 씀, 대기 지역이 없으면 아무것도 안 함)"
+        type: boolean
+        default: false
       region_day:
         description: "갱신할 지역 (요일별 담당 로테이션 기준). full_seed 체크 시 이 값은 무시됨"
         type: choice
@@ -38,46 +42,37 @@ permissions:
 jobs:
   update:
     runs-on: [self-hosted, home-pc]
+    env:
+      EV_SERVICE_KEY: ${{ secrets.EV_SERVICE_KEY }}
+      KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+      FULL_SEED: ${{ inputs.full_seed && '1' || '' }}
+      RETRY_PENDING: ${{ inputs.retry_pending && '1' || '' }}
+      REGION_DAY: ${{ inputs.region_day }}
+      PYTHONUNBUFFERED: "1"  # 로그가 실행 끝에 한꺼번에 찍히지 않고 실제 시각대로 남게 한다
     steps:
+      # dispatch된 시점의 커밋이 아니라 "지금" main의 최신 커밋에서 시작한다.
+      # 러너가 하나라 잡은 순서대로 돌지만, 같은 시각에 dispatch된 상태
+      # 갱신이 먼저 돌아 push하고 나면 dispatch 시점 커밋은 이미 옛것이라
+      # 우리 push가 거부된다 — 그걸 막는다.
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # 일부 지역이라도 갱신에 실패하면 종료 코드 1로 끝난다(실행이 빨간색으로
+      # 표시됨). 그래도 성공한 지역과 재시도 대기 기록은 아래 단계에서 커밋한다.
       - name: Fetch charger info
-        env:
-          EV_SERVICE_KEY: ${{ secrets.EV_SERVICE_KEY }}
-          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          FULL_SEED: ${{ inputs.full_seed && '1' || '' }}
-          REGION_DAY: ${{ inputs.region_day }}
         run: python scripts/fetch_chargers.py
 
       - name: Commit updated data
-        env:
-          EV_SERVICE_KEY: ${{ secrets.EV_SERVICE_KEY }}
-          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          FULL_SEED: ${{ inputs.full_seed && '1' || '' }}
-          REGION_DAY: ${{ inputs.region_day }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/chargers.geojson
-          git diff --cached --quiet && { echo "변경 없음, 커밋 생략"; exit 0; }
-          git commit -m "chore: charger data refresh (manual)"
-
-          if ! git push origin HEAD:main; then
-            echo "push 거부됨 — 우리 파일을 그대로 다시 밀어넣으면 그 사이 다른"
-            echo "실행(예: 상태 델타)이 반영한 내용을 덮어써버릴 수 있다."
-            echo "그래서 최신 상태를 새로 받아와 스크립트를 처음부터 다시 돌린다"
-            echo "(API를 한 번 더 호출하게 되지만, 데이터 유실보다는 낫다)."
-            git fetch origin main
-            git reset --hard origin/main
-            python scripts/fetch_chargers.py
-            git add docs/data/chargers.geojson
-            git diff --cached --quiet && { echo "변경 없음, 커밋 생략"; exit 0; }
-            git commit -m "chore: charger data refresh (manual)"
-            git push origin HEAD:main
-          fi
+        if: ${{ !cancelled() }}
+        run: >
+          scripts/commit_and_push.sh
+          "chore: charger data refresh"
+          "python scripts/fetch_chargers.py"
+          docs/data/chargers.geojson

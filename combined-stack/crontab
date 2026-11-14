@@ -1,4 +1,5 @@
 */10 * * * * root . /etc/environment; /repo_scripts/trigger_workflow.sh update-status.yml >> /var/log/cron.log 2>&1
 0 19 * * * root . /etc/environment; /repo_scripts/trigger_workflow.sh update-chargers.yml >> /var/log/cron.log 2>&1
+35 19-23,0 * * * root . /etc/environment; /repo_scripts/trigger_workflow.sh update-chargers.yml '{"retry_pending":"true"}' >> /var/log/cron.log 2>&1
 */5 * * * * root . /etc/environment; /repo_scripts/check_runner_health.sh >> /var/log/cron.log 2>&1
 0 0 * * 0 root : > /var/log/cron.log

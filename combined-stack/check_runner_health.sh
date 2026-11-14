@@ -20,6 +20,14 @@ RESPONSE=$(curl -s -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
   "https://api.github.com/repos/${REPO_PATH}/actions/runners")
 
+# API 호출 자체가 실패했거나(일시적 네트워크 문제, 한도 초과 등) 응답이
+# 러너 목록 형태가 아니면 러너 상태를 알 수 없는 것이지 오프라인인 게
+# 아니다. 이때 재시작하면 실행 중이던 갱신 작업이 끊기므로 판단을 미룬다.
+if ! echo "$RESPONSE" | jq -e '.runners | type == "array"' > /dev/null 2>&1; then
+  echo "[health] GitHub API 응답을 해석하지 못함 — 이번엔 판단을 보류합니다"
+  exit 0
+fi
+
 STATUS=$(echo "$RESPONSE" | jq -r --arg name "$RUNNER_NAME" '.runners[] | select(.name==$name) | .status')
 
 if [ "$STATUS" = "online" ]; then

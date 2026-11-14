@@ -1,9 +1,15 @@
 """supercharge.info(테슬라 슈퍼차저 커뮤니티 오픈 데이터베이스) 전용 로직."""
+import os
+
 from http_client import fetch_json
 from kakao_geocoder import find_nearby_place_name, reverse_geocode
 from operating_hours import parse_use_time
 
 SUPERCHARGE_INFO_URL = "https://supercharge.info/service/supercharge/allSites"
+
+# 전 세계 사이트를 한 번에 내려주는 큰 응답이고 서버가 느릴 때가 많아서,
+# 다른 API보다 훨씬 길게 기다리고 압축 전송을 요청한다.
+SUPERCHARGE_INFO_TIMEOUT_SEC = 240
 
 # supercharge.info의 stalls 필드 키 -> 표시 라벨
 STALL_VERSION_LABELS = {
@@ -31,6 +37,8 @@ def _truncate_after_supercharger(name):
 
 def fetch_tesla_superchargers():
     """한국 소재의 '운영중(OPEN)' 슈퍼차저만 받아와 station dict 리스트로 반환한다.
+    조회에 실패하면 None을 반환한다 — 빈 리스트("한국에 슈퍼차저가 없다")와
+    구분해야 호출부가 기존 목록을 지울지 말지 판단할 수 있다.
 
     한국환경공단 API에는 테슬라(busiId=TE) 데이터가 실질적으로 없어서
     (실측 결과 전국 0건) 이 별도 소스로 보강한다. 정부 API 일일 한도와
@@ -53,13 +61,14 @@ def fetch_tesla_superchargers():
     보여달라는 요청에 따른 것이다.
     """
     try:
-        sites = fetch_json(SUPERCHARGE_INFO_URL)
-    except Exception as err:  # noqa: BLE001 - 외부 API 실패는 전체 실행을 막지 않고 건너뛴다
-        print(f"경고: 테슬라 슈퍼차저(supercharge.info) 조회 실패, 건너뜀: {err}")
-        return []
+        sites = fetch_json(SUPERCHARGE_INFO_URL, timeout_sec=SUPERCHARGE_INFO_TIMEOUT_SEC, compressed=True)
+    except Exception as err:  # noqa: BLE001 - 어떤 이유로 실패하든 "조회 실패"로 통일한다
+        print(f"경고: 테슬라 슈퍼차저(supercharge.info) 조회 실패: {err}")
+        return None
 
     stations = []
     skipped_below_v3 = 0
+    korean_addr_count = 0
     for site in sites:
         addr = site.get("address") or {}
         country = addr.get("country") or ""
@@ -109,6 +118,7 @@ def fetch_tesla_superchargers():
         # 영문 state/city를 그대로 쓴다.
         korean_addr = reverse_geocode(lat, lng)
         if korean_addr:
+            korean_addr_count += 1
             display_addr = korean_addr
             display_addr_detail = ""
         else:
@@ -140,6 +150,13 @@ def fetch_tesla_superchargers():
                 "chargers": [],
             }
         )
+
+    if stations and korean_addr_count == 0 and os.environ.get("KAKAO_REST_API_KEY"):
+        # 카카오 키가 있는데 한글 주소가 하나도 안 나왔다 — 카카오 API에 못
+        # 닿은 것이다. 이대로 저장하면 이름/주소가 전부 영문으로 덮어써지므로
+        # 조회 실패로 취급한다.
+        print("경고: 카카오 좌표→주소 변환이 전부 실패했습니다 — 슈퍼차저 조회를 실패로 처리합니다.")
+        return None
 
     print(f"[supercharge.info] 한국 내 운영중 슈퍼차저 {len(stations)}개소 (V3 미만 제외: {skipped_below_v3}건)")
     return stations

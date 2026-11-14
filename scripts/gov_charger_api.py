@@ -4,6 +4,7 @@
 - 필터 조건 (완속/NACS 타입, 이용제한, 학교/아파트 제외 등)
 - 시도(zcode) 요일별 그룹 — 하루에 전국을 다 스캔하는 대신 7일에 나눠 담당
 - 원본 item -> station dict 변환 (GeoJSON 변환은 geojson_store의 책임)
+- 지역별 수집 완전성 판정 (빈/잘린 응답을 정상 결과로 취급하지 않는다)
 
 주소 텍스트 파싱/좌표 검증은 address_parser로, 한도초과 쿨다운 상태 관리는
 quota_cooldown으로, 좌표 검증/보정 자체는 kakao_geocoder로, 이용시간 텍스트
@@ -13,9 +14,10 @@ quota_cooldown으로, 좌표 검증/보정 자체는 kakao_geocoder로, 이용�
 import time
 import urllib.parse
 from collections import OrderedDict
+from dataclasses import dataclass, field
 
 from address_parser import coordinates_plausible, split_addr_and_location
-from http_client import QuotaExceededError, fetch_json
+from http_client import FetchError, QuotaExceededError, fetch_json
 from kakao_geocoder import verify_and_correct
 from operating_hours import parse_use_time
 from quota_cooldown import in_cooldown, start_cooldown
@@ -157,6 +159,31 @@ ALL_ZCODES = {z for group in DAY_ZCODE_GROUPS for z in group}
 # 썼는데, 부산(3만여 건) 기준 33페이지 -> 4페이지로 거의 8배 줄었다.
 MAX_NUM_OF_ROWS = 9999
 
+# 정부 API는 간헐적으로 "정상 JSON인데 item이 비어 있는" 응답을 준다(대량
+# 호출 직후에 주로 관측됨). 완전 수집이 필요한 조회에서 이런 빈 페이지를
+# 받으면 잠깐 쉬었다가 같은 페이지를 다시 요청한다.
+EMPTY_PAGE_RETRIES = 2
+EMPTY_PAGE_RETRY_WAIT_SEC = 20
+
+
+class ApiResponseError(RuntimeError):
+    """API가 오류 resultCode를 돌려줬을 때."""
+
+
+class IncompleteFetchError(RuntimeError):
+    """totalCount만큼 다 받지 못했을 때(빈 응답/중간에 끊긴 응답)."""
+
+
+@dataclass
+class RegionFetchResult:
+    """fetch_region의 결과. 완전히 수집된 지역만 stations_by_zcode에 담기고,
+    나머지는 failed_zcodes로 돌려준다(호출부가 기존 데이터를 지키고 재시도
+    대기로 남기도록)."""
+
+    stations_by_zcode: dict = field(default_factory=dict)
+    failed_zcodes: list = field(default_factory=list)
+    quota_exceeded: bool = False
+
 
 def _build_url(operation, service_key, page_no, num_of_rows, extra_params):
     params = {
@@ -174,30 +201,61 @@ def _build_url(operation, service_key, page_no, num_of_rows, extra_params):
     return f"{API_BASE}/{operation}?{urllib.parse.urlencode(params)}"
 
 
-def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_NUM_OF_ROWS):
-    """totalCount에 도달할 때까지 pageNo를 늘려가며 전체 item을 모아 반환한다."""
+def _fetch_page(operation, service_key, page_no, num_of_rows, extra_params):
+    """한 페이지를 받아 (item 리스트, totalCount)로 돌려준다."""
+    url = _build_url(operation, service_key, page_no, num_of_rows, extra_params)
+    data = fetch_json(url, quota_marker=QUOTA_MARKER)
+
+    result_code = data.get("resultCode")
+    if result_code not in (None, "00"):
+        raise ApiResponseError(f"API 오류(resultCode={result_code}): {data.get('resultMsg')}")
+
+    page_items = data.get("items", {})
+    page_items = page_items.get("item", []) if isinstance(page_items, dict) else []
+    if isinstance(page_items, dict):
+        page_items = [page_items]
+
+    if not page_items:
+        # 빈 응답이 실제로 어떤 모양인지 로그에 남긴다(원인 추적용 — 키 이름과
+        # 결과 코드만 찍고 본문/인증키는 찍지 않는다).
+        print(
+            f"[{operation}]   빈 페이지 {page_no}: resultCode={result_code!r} "
+            f"resultMsg={data.get('resultMsg')!r} totalCount={data.get('totalCount')!r} "
+            f"keys={sorted(data.keys())}"
+        )
+    return page_items, int(data.get("totalCount") or 0)
+
+
+def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_NUM_OF_ROWS,
+                     require_complete=False):
+    """totalCount에 도달할 때까지 pageNo를 늘려가며 전체 item을 모아 반환한다.
+
+    require_complete=True면 빈 페이지를 "수집 끝"으로 보지 않는다 — 같은
+    페이지를 다시 요청해보고, 그래도 totalCount만큼 못 채우면
+    IncompleteFetchError를 낸다(일부만 받은 결과로 기존 데이터를 덮어쓰지
+    않기 위함). False면 예전처럼 빈 페이지에서 조용히 멈춘다 — 조회 도중
+    건수가 계속 변하는 델타 피드(getChargerStatus)용이다.
+    """
     items = []
     page_no = 1
     total_count = None
+    empty_retries_left = EMPTY_PAGE_RETRIES if require_complete else 0
 
     while True:
-        url = _build_url(operation, service_key, page_no, num_of_rows, extra_params)
-        data = fetch_json(url, quota_marker=QUOTA_MARKER)
-
-        result_code = data.get("resultCode")
-        if result_code not in (None, "00"):
-            raise RuntimeError(f"API 오류(resultCode={result_code}): {data.get('resultMsg')}")
-
-        if total_count is None:
-            total_count = int(data.get("totalCount", 0))
-
-        page_items = data.get("items", {})
-        page_items = page_items.get("item", []) if isinstance(page_items, dict) else []
-        if isinstance(page_items, dict):
-            page_items = [page_items]
+        page_items, reported_total = _fetch_page(operation, service_key, page_no, num_of_rows, extra_params)
+        if total_count is None or (not items and reported_total):
+            total_count = reported_total
 
         if not page_items:
-            break
+            if not require_complete:
+                break
+            if empty_retries_left > 0:
+                empty_retries_left -= 1
+                time.sleep(EMPTY_PAGE_RETRY_WAIT_SEC)
+                continue
+            raise IncompleteFetchError(
+                f"{operation} {extra_params}: {len(items)}/{total_count}건만 수집됨(페이지 {page_no}가 비어 있음)"
+            )
 
         items.extend(page_items)
         # 페이지가 많을 때 로그가 쓸데없이 길어지지 않도록 5페이지마다만 남긴다.
@@ -357,23 +415,36 @@ def build_stations(items):
 
 
 def fetch_region(service_key, zcodes):
-    """주어진 zcode들의 전체 정보를 받아 필터링된 station dict 리스트로 반환한다.
+    """주어진 zcode들을 지역별로 받아 RegionFetchResult로 반환한다.
 
-    한도초과 쿨다운 중이거나, 이번 호출에서 한도초과가 감지되면 None을
-    반환한다 (호출부가 "이번엔 건너뜀"으로 처리하도록).
+    완전히 수집된 지역만 필터링된 station dict 리스트로 담긴다. 응답이
+    비었거나 중간에 끊긴 지역, 요청 자체가 실패한 지역은 failed_zcodes에
+    들어간다. 한도초과 쿨다운 중이거나 도중에 한도초과가 감지되면 아직
+    못 받은 지역을 전부 실패로 돌리고 quota_exceeded를 표시한다.
     """
+    result = RegionFetchResult()
     if in_cooldown():
         print("[gov_charger_api] 오늘 API 한도 초과로 쿨다운 중 — 지역 갱신 건너뜀")
-        return None
-    try:
-        all_items = []
-        for zcode in zcodes:
-            all_items.extend(_fetch_all_pages("getChargerInfo", service_key, {"zcode": zcode}))
-        return build_stations(all_items)
-    except QuotaExceededError:
-        until = start_cooldown()
-        print(f"[gov_charger_api] API 한도 초과 감지 — {until.isoformat()}까지 쿨다운 시작")
-        return None
+        result.failed_zcodes = list(zcodes)
+        result.quota_exceeded = True
+        return result
+
+    for index, zcode in enumerate(zcodes):
+        try:
+            items = _fetch_all_pages("getChargerInfo", service_key, {"zcode": zcode}, require_complete=True)
+        except QuotaExceededError:
+            until = start_cooldown()
+            print(f"[gov_charger_api] API 한도 초과 감지 — {until.isoformat()}까지 쿨다운 시작")
+            result.failed_zcodes.extend(zcodes[index:])
+            result.quota_exceeded = True
+            break
+        except (IncompleteFetchError, ApiResponseError, FetchError) as err:
+            name = ZCODE_NAMES.get(zcode, zcode)
+            print(f"경고: {name}({zcode}) 수집 실패 — 기존 데이터를 유지합니다: {err}")
+            result.failed_zcodes.append(zcode)
+            continue
+        result.stations_by_zcode[zcode] = build_stations(items)
+    return result
 
 
 def fetch_status_delta(service_key, period_min):

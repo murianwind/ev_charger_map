@@ -17,10 +17,18 @@ scripts/
 ├── kakao_geocoder.py    # 카카오 로컬 API로 좌표 검증/보정, 역지오코딩, 장소명 검색 (선택 사항)
 ├── gov_charger_api.py   # 환경공단 API 전용: 페이지네이션, 필터, 지역(zcode) 요일별 그룹
 ├── tesla_source.py      # supercharge.info 전용: 테슬라 슈퍼차저 조회
-├── geojson_store.py     # chargers.geojson 읽기/쓰기, 지역별 부분 교체 병합
-├── fetch_chargers.py    # 일일 진입점 — 오늘 담당 지역 + 테슬라 갱신
-└── fetch_status.py      # 델타 진입점 — 최근 상태 변경분만 갱신
+├── tesla_snapshot.py    # data/tesla_snapshot.json(마지막 성공 슈퍼차저 목록) 읽기/쓰기
+├── geojson_store.py     # chargers.geojson 읽기/쓰기, 지역별 부분 교체 병합, 재시도 대기 기록
+├── fetch_chargers.py    # 일일 진입점 — 담당 지역(+재시도 대기 지역) 갱신, 슈퍼차저 스냅샷 반영
+├── fetch_status.py      # 델타 진입점 — 최근 상태 변경분만 갱신
+├── fetch_tesla.py       # 슈퍼차저 진입점 — supercharge.info 조회 후 스냅샷 갱신
+└── commit_and_push.sh   # 워크플로 공용 — 커밋/푸시, push 거부 시 rebase 재시도
+tests/
+├── features/*.feature   # BDD 시나리오 (한글 Gherkin)
+└── conftest.py          # 스텝 정의 (네트워크는 전부 가짜로 대체)
 ```
+
+테스트 실행: `pip install -r requirements-dev.txt && python -m pytest tests`
 
 각 모듈은 자신의 계층만 안다는 원칙을 지켰습니다: `http_client`는 EV 충전소를
 모르고, `gov_charger_api`는 GeoJSON을 모르고, `geojson_store`는 API를 모릅니다.
@@ -159,7 +167,19 @@ data.go.kr 개발계정은 **하루 1,000건** 호출 제한이 있습니다. �
 갱신합니다 (GitHub Actions에서 수동 실행 시 체크박스로도 선택 가능 — 평소
 자동 실행에는 쓰지 않습니다).
 
-**2) 상태 델타 갱신 (`fetch_status.py`, 매시간)**
+**지역 갱신 실패와 재시도**
+
+정부 API는 간헐적으로 "정상 JSON인데 내용이 비어 있는" 응답을 줍니다. 지역
+갱신은 `totalCount`만큼 끝까지 받은 지역만 교체하고, 비었거나 중간에 끊긴
+지역은 기존 데이터를 그대로 둔 채 `meta.pendingRegions`(재시도 대기)에
+기록합니다. 실패한 지역이 하나라도 있으면 그 실행은 **빨간색(실패)**으로
+끝납니다(성공한 지역과 대기 기록은 커밋됨).
+
+대기 지역은 홈 스케줄러가 04:35~09:35 KST 매시 35분에 dispatch하는 재시도
+실행(`retry_pending`)이 다시 받습니다 — 대기 지역이 없으면 API를 호출하지
+않고 바로 끝납니다. 그래도 못 받은 지역은 다음 날 정기 실행이 함께 받습니다.
+
+**2) 상태 델타 갱신 (`fetch_status.py`, 10분마다)**
 
 `getChargerStatus`는 `period`(분) 파라미터로 그 시간 안에 상태가 바뀐 충전기만
 돌려주는 델타 피드라서, 전체를 다시 받지 않고 변경분만 기존
@@ -188,6 +208,22 @@ data.go.kr 개발계정은 **하루 1,000건** 호출 제한이 있습니다. �
 소요시간)이 남습니다.** 컨테이너 자체는 git을 몰라도 되고, 잠금(`flock`) 같은
 것도 필요 없습니다 — 러너 하나가 잡을 순서대로 처리해주기 때문입니다.
 
+**경합 방지**: 두 워크플로 모두 dispatch 시점이 아니라 실행 시작 시점의
+`main` 최신 커밋을 체크아웃합니다(같은 시각에 dispatch된 다른 실행이 먼저
+push해도 그 위에서 출발). 그래도 push가 거부되면 `commit_and_push.sh`가
+rebase로 다시 시도하고, 같은 파일이 충돌할 때만 스크립트를 처음부터 다시
+돌립니다.
+
+**테슬라 슈퍼차저만 예외**로 GitHub 호스팅 러너에서 돕니다
+(`update-tesla.yml`, 매일 03:17 KST). supercharge.info는 응답이 몇 분씩
+걸리거나 아예 안 올 때가 있는데, 하나뿐인 집 러너가 그동안 묶이면 10분 주기
+상태 갱신이 밀리기 때문입니다. 이 워크플로는 `data/tesla_snapshot.json`만
+갱신하고, 지역 갱신이 그 스냅샷을 지도에 합칩니다. 조회에 실패하면
+스냅샷(=지도의 슈퍼차저)은 마지막 성공분 그대로 남습니다.
+
+`combined-stack/`의 파일(crontab, 스크립트)을 고치면 Portainer에서 스택을
+다시 빌드·배포해야 적용됩니다.
+
 설정 방법은 `combined-stack/` 안의 파일들과 Portainer "Repository" 스택 배포
 방식을 참고하세요 (Dockerfile이 저장소에 같이 있어야 GUI만으로 빌드 가능).
 
@@ -195,8 +231,8 @@ data.go.kr 개발계정은 **하루 1,000건** 호출 제한이 있습니다. �
 
 - **GitHub Actions 탭**: 모든 실행(cron/수동 불문)이 여기 남습니다.
 - **지도 페이지 헤더**: "지역갱신 MM/DD HH:MM · 상태갱신 MM/DD HH:MM"으로
-  마지막 갱신 시각이 표시됩니다. 한도초과로 건너뛴 경우 "(한도초과로 건너뜀)"이
-  같이 표시됩니다.
+  마지막 갱신 시각이 표시됩니다. 한도초과로 건너뛴 경우 "(한도초과로 건너뜀)",
+  일부 지역이 실패한 경우 "(일부 지역 실패 — 재시도 대기)"가 같이 표시됩니다.
 - **API 일일 한도 초과 시**: 자동으로 다음날 자정(KST)까지 재시도를 쉬고,
   그동안 들어오는 실행 요청은 API를 아예 호출하지 않고 즉시 건너뜁니다
   (`gov_charger_api`의 쿨다운 로직).

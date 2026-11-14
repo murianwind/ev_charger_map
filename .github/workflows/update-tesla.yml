@@ -1,0 +1,49 @@
+name: Update Tesla Supercharger Snapshot
+
+# supercharge.info에서 한국 내 슈퍼차저 목록을 받아 data/tesla_snapshot.json을
+# 갱신한다. 지도(chargers.geojson)에는 지역 갱신(update-chargers.yml)이 이
+# 스냅샷을 읽어서 반영한다.
+#
+# 정부 API와 달리 해외 IP를 막지 않으므로 집 러너가 아니라 GitHub 호스팅
+# 러너에서 돈다 — supercharge.info는 응답이 몇 분씩 걸리거나 아예 안 올 때가
+# 있는데, 그동안 하나뿐인 집 러너가 묶여 10분 주기 상태 갱신이 밀리는 걸
+# 피하기 위함이다. 조회에 실패하면 실행이 빨간색으로 끝나고 스냅샷(=지도의
+# 슈퍼차저)은 마지막 성공분 그대로 남는다.
+on:
+  schedule:
+    - cron: "17 18 * * *"  # 매일 03:17 KST — 04:00 지역 갱신이 새 스냅샷을 반영하도록 그 전에
+  workflow_dispatch: {}
+
+concurrency:
+  group: update-tesla
+
+permissions:
+  contents: write
+
+jobs:
+  update-tesla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch superchargers
+        run: python scripts/fetch_tesla.py
+
+      - name: Commit snapshot
+        run: >
+          scripts/commit_and_push.sh
+          "chore: tesla supercharger snapshot update"
+          "python scripts/fetch_tesla.py"
+          data/tesla_snapshot.json
