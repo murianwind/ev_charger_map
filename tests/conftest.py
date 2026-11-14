@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 import address_parser  # noqa: E402
 import fetch_chargers  # noqa: E402
+import fetch_status  # noqa: E402
 import fetch_tesla  # noqa: E402
 import geojson_store  # noqa: E402
 import gov_charger_api  # noqa: E402
@@ -51,6 +52,13 @@ def gov_item(region, index):
         "stat": "2",
         "zcode": zcode,
     }
+
+
+GATEWAY_ERROR = {
+    "OpenAPI_ServiceResponse": {
+        "cmmMsgHeader": {"errMsg": "SERVICE ERROR", "returnAuthMsg": "HTTP_ERROR", "returnReasonCode": "04"}
+    }
+}
 
 
 def page(items, total):
@@ -287,7 +295,7 @@ def run_retry(world):
 
 
 @when("상태 변경분을 조회하면")
-def fetch_status(world):
+def fetch_status_items(world):
     world.status_items = gov_charger_api.fetch_status_delta("test-key", 10)
 
 
@@ -470,3 +478,71 @@ def kakao_call_count(world, count):
 @then("좌표 조회 결과는 모두 없음이다")
 def geocode_all_none(world):
     assert all(r is None for r in world.result)
+
+
+# ---------- 게이트웨이 오류 ----------
+
+@given(parsers.parse("정부 API가 {region}은 계속 게이트웨이 오류를 응답한다"))
+def gov_gateway_error(world, region):
+    world.gov_api.region_plans[REGIONS[region][0]] = lambda _page_no, _call: GATEWAY_ERROR
+
+
+@given(
+    parsers.parse(
+        "정부 API가 {region}은 3페이지에 걸쳐 6개소를 주되 페이지마다 첫 요청은 게이트웨이 오류를 응답한다"
+    )
+)
+def gov_error_once_per_page(world, region):
+    items = _items(region, 6)
+    seen_pages = set()
+
+    def plan(page_no, _call):
+        if page_no not in seen_pages:
+            seen_pages.add(page_no)
+            return GATEWAY_ERROR
+        return page(items[(page_no - 1) * 2 : page_no * 2], 6)
+
+    world.gov_api.region_plans[REGIONS[region][0]] = plan
+
+
+@given("상태 API가 계속 게이트웨이 오류를 응답한다")
+def status_gateway_error(world):
+    world.gov_api.status_plan = lambda _page_no: GATEWAY_ERROR
+
+
+@given("상태 API가 한 번 게이트웨이 오류를 준 뒤 기존 부산 충전소 1건의 상태 변경을 응답한다")
+def status_recovers(world):
+    change = {"statId": "OLD-26-0", "chgerId": "01", "stat": "3", "statUpdDt": "20261114103000"}
+    world.gov_api.status_plan = lambda _page_no: (
+        GATEWAY_ERROR if len(world.gov_api.calls) == 1 else page([change], 1)
+    )
+
+
+@when("상태 갱신을 실행하면")
+def run_status(world):
+    world.monkeypatch.setenv("EV_SERVICE_KEY", "test-key")
+    try:
+        fetch_status.main()
+        world.result = True
+    except gov_charger_api.ApiResponseError:
+        world.result = False
+
+
+@then("상태 갱신 결과는 성공이다")
+def status_ok(world):
+    assert world.result is True
+
+
+@then("상태 갱신 결과는 실패다")
+def status_failed(world):
+    assert world.result is False
+
+
+@then("지도에 마지막 상태 갱신 기록이 없다")
+def no_status_record(world):
+    assert "lastStatusUpdate" not in _load_map().get("meta", {})
+
+
+@then(parsers.parse("지도의 마지막 상태 갱신은 {count:d}건 반영이다"))
+def status_record(world, count):
+    assert _load_map()["meta"]["lastStatusUpdate"]["updated"] == count
