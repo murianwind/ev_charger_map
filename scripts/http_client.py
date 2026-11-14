@@ -38,7 +38,7 @@ class FetchError(RuntimeError):
     """반복 재시도 후에도 실패했을 때 발생하는, 민감정보가 제거된 에러."""
 
 
-def fetch_json(url, quota_marker=None, extra_headers=None):
+def fetch_json(url, quota_marker=None, extra_headers=None, timeout_sec=CURL_TIMEOUT_SEC, compressed=False):
     """curl로 url을 요청해 JSON으로 파싱한 결과를 반환한다.
 
     quota_marker가 주어지고 응답 본문에 그 문자열이 있으면 QuotaExceededError를
@@ -47,18 +47,23 @@ def fetch_json(url, quota_marker=None, extra_headers=None):
 
     extra_headers는 {"Authorization": "..."} 같은 추가 헤더가 필요한 API
     (예: 카카오)를 위한 것이다.
+
+    timeout_sec는 응답이 유난히 느린 서버(예: supercharge.info)에만 길게
+    준다. compressed=True면 gzip 등 압축 전송을 요청해(curl --compressed)
+    큰 응답의 전송량을 줄인다.
     """
     last_err = "알 수 없는 오류"
     header_args = []
     for name, value in (extra_headers or {}).items():
         header_args += ["-H", f"{name}: {value}"]
+    option_args = ["--compressed"] if compressed else []
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             result = subprocess.run(
-                ["curl", "-s", "-A", USER_AGENT, "--max-time", str(CURL_TIMEOUT_SEC), *header_args, url],
+                ["curl", "-s", "-A", USER_AGENT, "--max-time", str(timeout_sec), *option_args, *header_args, url],
                 capture_output=True,
-                timeout=CURL_TIMEOUT_SEC + 5,
+                timeout=timeout_sec + 5,
                 check=True,
             )
             body = result.stdout.decode("utf-8")
@@ -72,7 +77,7 @@ def fetch_json(url, quota_marker=None, extra_headers=None):
         except QuotaExceededError:
             raise
         except subprocess.TimeoutExpired:
-            last_err = f"요청 시간 초과({CURL_TIMEOUT_SEC}초)"
+            last_err = f"요청 시간 초과({timeout_sec}초)"
         except subprocess.CalledProcessError as err:
             # err에는 실행한 curl 명령어 전체(URL 포함)가 들어있어 그대로 출력하면
             # 인증키가 로그에 노출된다. 종료 코드만 남긴다.

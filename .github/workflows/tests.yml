@@ -1,0 +1,23 @@
+name: Tests
+
+on:
+  pull_request:
+    paths: ["scripts/**", "tests/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
+  push:
+    branches: [main]
+    paths: ["scripts/**", "tests/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest tests -q
+      - run: python scripts/sync_region_day_options.py --check

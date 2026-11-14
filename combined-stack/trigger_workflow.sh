@@ -3,14 +3,19 @@
 # git commit/push)은 이 컨테이너가 아니라 self-hosted 러너로 그 워크플로를
 # 받아서 처리한다 — 그래서 매 실행이 GitHub Actions 탭에 정상적인 실행
 # 기록(로그, 성공/실패, 소요시간)으로 남는다.
+#
+# 사용법: trigger_workflow.sh <workflow-file.yml> [inputs JSON]
+#   예) trigger_workflow.sh update-chargers.yml '{"retry_pending":"true"}'
 set -e
 
 : "${ACCESS_TOKEN:?ACCESS_TOKEN 환경변수가 필요합니다}"
 : "${REPO_URL:?REPO_URL 환경변수가 필요합니다}"
 
 WORKFLOW_FILE="$1"
+INPUTS_JSON="${2:-}"  # 워크플로 inputs (없으면 빈 객체)
+[ -n "$INPUTS_JSON" ] || INPUTS_JSON='{}'
 if [ -z "$WORKFLOW_FILE" ]; then
-  echo "사용법: trigger_workflow.sh <workflow-file.yml>" >&2
+  echo "사용법: trigger_workflow.sh <workflow-file.yml> [inputs JSON]" >&2
   exit 1
 fi
 
@@ -21,7 +26,7 @@ HTTP_STATUS=$(curl -s -o /tmp/trigger_response.json -w "%{http_code}" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
   "https://api.github.com/repos/${REPO_PATH}/actions/workflows/${WORKFLOW_FILE}/dispatches" \
-  -d '{"ref":"main"}')
+  -d "{\"ref\":\"main\",\"inputs\":${INPUTS_JSON}}")
 
 if [ "$HTTP_STATUS" = "204" ]; then
   echo "[trigger] ${WORKFLOW_FILE} dispatch 성공"

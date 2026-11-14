@@ -1,5 +1,5 @@
 """docs/data/chargers.geojson 파일의 읽기/쓰기, station dict <-> feature 변환,
-지역(zcode)/테슬라 단위의 부분 교체를 담당한다.
+지역(zcode)/테슬라 단위의 부분 교체, 재시도 대기 지역 기록을 담당한다.
 
 이 모듈은 API를 전혀 모른다 — GeoJSON 파일 자체의 구조만 다룬다.
 """
@@ -71,3 +71,27 @@ def prune_orphaned(geojson, valid_zcodes):
     ]
     removed = before - len(geojson["features"])
     return geojson, removed
+
+
+def count_region(geojson, zcode):
+    return sum(1 for f in geojson["features"] if f["properties"].get("zcode") == zcode)
+
+
+def pending_regions(geojson):
+    """갱신에 실패해 재시도를 기다리는 zcode 목록(정렬됨)."""
+    return sorted(geojson.get("meta", {}).get("pendingRegions", {}))
+
+
+def mark_pending(geojson, zcodes, now_iso):
+    """zcodes를 재시도 대기로 기록한다. 이미 대기 중이면 처음 실패한 시각은
+    그대로 두고 시도 횟수만 늘린다."""
+    pending = geojson.setdefault("meta", {}).setdefault("pendingRegions", {})
+    for zcode in zcodes:
+        entry = pending.setdefault(zcode, {"since": now_iso, "attempts": 0})
+        entry["attempts"] += 1
+
+
+def clear_pending(geojson, zcodes):
+    pending = geojson.get("meta", {}).get("pendingRegions", {})
+    for zcode in zcodes:
+        pending.pop(zcode, None)

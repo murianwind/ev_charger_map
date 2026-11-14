@@ -1028,7 +1028,8 @@ function renderLastUpdated(meta) {
   }
   const skipLabel = (status) => {
     if (status === "skipped_quota_exceeded") return " (한도초과로 건너뜀)";
-    if (status === "skipped_suspicious_empty_result") return " (이상 응답으로 건너뜀)";
+    if (status === "partial_failure") return " (일부 지역 실패 — 재시도 대기)";
+    if (status === "failed") return " (실패 — 재시도 대기)";
     return "";
   };
   const parts = [];
