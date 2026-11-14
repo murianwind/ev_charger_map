@@ -84,6 +84,8 @@ def fetch_json(url, quota_marker=None, extra_headers=None, timeout_sec=CURL_TIME
             last_err = f"curl 종료 코드 {err.returncode}"
         except json.JSONDecodeError as err:
             last_err = f"응답을 JSON으로 해석하지 못함: {err.msg}"
+        except UnicodeDecodeError:
+            last_err = "응답이 UTF-8 텍스트가 아님"
 
         print(f"  경고: 요청 실패({attempt}/{MAX_RETRIES}): {last_err} — {redact_secrets(url)}")
         time.sleep(RETRY_WAIT_SEC)

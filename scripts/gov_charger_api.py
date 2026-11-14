@@ -111,7 +111,16 @@ FORCE_INCLUDE_SCHOOL_KEYWORDS = ("대학교",)
 # - "제한됨": "출입이 제한됨"처럼 조건부가 아니라 확정적으로 제한된 경우를
 #   커버한다("제한될 수"와는 별개 — 조건부/확정 둘 다 잡는다).
 # - "보안구역": "제한" 표현 없이 "보안구역"이라고만 적힌 경우를 대비한다.
-NON_OPEN_KEYWORDS = ( "비개방", "불가", "금지", "외부인", "입주민", "거주자", "제한될 수", "제한됨", "내방객", "보안구역", "방문객 외", "출입제한", "관계자 외")
+# - "전용"/"직원"/"고객만"/"비공개"/"출입 제한": "임직원 전용", "호텔이용객전용",
+#   "업소고객전용", "비공개(관용차 전용)", "직원 및 업무용차량 출입 제한",
+#   "코스트코 고객만 가능"처럼 특정 대상만 쓸 수 있다는 문구를 커버한다
+#   (전부 limitYn=N으로 내려와 지도에 올라가 있던 실제 사례).
+NON_OPEN_KEYWORDS = ( "비개방", "불가", "금지", "외부인", "입주민", "거주자", "제한될 수", "제한됨", "내방객", "보안구역", "방문객 외", "출입제한", "출입 제한", "관계자 외", "전용", "직원", "고객만", "비공개")
+
+# 이용시간이 통째로 "미개방"인 곳은 개방하지 않는 충전소다. "미개방"을 위
+# 키워드처럼 아무 위치에서나 찾으면 "07:00~20:00(일요일 미개방)"처럼 일부
+# 요일만 닫는 곳까지 빠지므로, 이용시간이 이 말로 시작할 때만 제외한다.
+NOT_OPENED_USE_TIME_PREFIX = "미개방"
 
 # 교도소/구치소 등은 kindDetail 47개 카테고리에 대응하는 항목이 아예 없어서
 # (가이드 문서 기준), kindDetail로는 못 걸러낸다. 이런 시설은 보통 시설명에
@@ -233,8 +242,10 @@ def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_
     require_complete=True면 빈 페이지를 "수집 끝"으로 보지 않는다 — 같은
     페이지를 다시 요청해보고, 그래도 totalCount만큼 못 채우면
     IncompleteFetchError를 낸다(일부만 받은 결과로 기존 데이터를 덮어쓰지
-    않기 위함). False면 예전처럼 빈 페이지에서 조용히 멈춘다 — 조회 도중
-    건수가 계속 변하는 델타 피드(getChargerStatus)용이다.
+    않기 위함). False면 빈 페이지나 덜 찬 페이지(=마지막 페이지)에서 조용히
+    멈춘다 — 조회 도중 건수가 계속 변해 totalCount와 실제 건수가 어긋나는
+    델타 피드(getChargerStatus)용이다. 덜 찬 페이지에서 멈추지 않으면
+    totalCount를 채우려고 있지도 않은 다음 페이지를 한 번 더 요청하게 된다.
     """
     items = []
     page_no = 1
@@ -264,6 +275,8 @@ def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_
 
         if len(items) >= total_count:
             break
+        if not require_complete and len(page_items) < num_of_rows:
+            break
         page_no += 1
         time.sleep(0.2)
 
@@ -287,6 +300,8 @@ def passes_filter(item):
 
     text_fields = f"{item.get('limitDetail') or ''} {item.get('useTime') or ''}"
     if any(keyword in text_fields for keyword in NON_OPEN_KEYWORDS):
+        return False
+    if (item.get("useTime") or "").strip().startswith(NOT_OPENED_USE_TIME_PREFIX):
         return False
 
     if any(keyword in stat_nm for keyword in RESTRICTED_NAME_KEYWORDS):

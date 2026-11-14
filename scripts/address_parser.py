@@ -56,7 +56,7 @@ def split_addr_and_location(addr):
     return address_part, combined_rest
 
 
-# addr 텍스트에 이 지역명이 있으면, 좌표가 대략 이 사각 범위(lat_min, lat_max,
+# addr가 이 지역명으로 시작하면, 좌표가 대략 이 사각 범위(lat_min, lat_max,
 # lng_min, lng_max) 안에 있어야 한다. 정확한 행정경계가 아니라 넉넉한 사각형
 # 근사치라, 경계 지역에서는 드물게 오탐/누락이 있을 수 있다 — 그래도 "대전
 # 주소인데 좌표는 이천"처럼 완전히 딴 지역으로 튄 경우는 확실히 잡아낸다.
@@ -92,8 +92,11 @@ def coordinates_plausible(addr, lat, lng):
     addr에서 알아볼 수 있는 지역명이 없으면 판단하지 않고 통과시킨다
     (틀렸다고 확신할 근거가 없을 때 잘못 걸러내지 않기 위함).
     """
-    addr = addr or ""
+    # 시도명은 주소 맨 앞에만 온다. 주소 어디에든 있으면 맞는 걸로 보면
+    # "부산광역시 해운대구"가 "대구"로, "월드컵경기장로"가 "경기"로 잘못
+    # 읽혀서 멀쩡한 충전소가 불일치로 걸러진다.
+    addr = (addr or "").lstrip()
     for province, (lat_min, lat_max, lng_min, lng_max) in PROVINCE_BOUNDS.items():
-        if province in addr:
+        if addr.startswith(province):
             return lat_min <= lat <= lat_max and lng_min <= lng <= lng_max
     return True

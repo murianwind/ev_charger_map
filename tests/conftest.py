@@ -13,11 +13,14 @@ from pytest_bdd import given, parsers, then, when
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
+import address_parser  # noqa: E402
 import fetch_chargers  # noqa: E402
 import fetch_tesla  # noqa: E402
 import geojson_store  # noqa: E402
 import gov_charger_api  # noqa: E402
 import http_client  # noqa: E402
+import kakao_geocoder  # noqa: E402
+import operating_hours  # noqa: E402
 import quota_cooldown  # noqa: E402
 import tesla_snapshot  # noqa: E402
 import tesla_source  # noqa: E402
@@ -110,6 +113,7 @@ def world(tmp_path, monkeypatch):
     monkeypatch.setattr(tesla_source, "fetch_json", fake_tesla_fetch)
     for name in ("KAKAO_REST_API_KEY", "FULL_SEED", "REGION_DAY", "RETRY_PENDING"):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(kakao_geocoder, "_consecutive_failures", 0, raising=False)
     world.monkeypatch = monkeypatch
     return world
 
@@ -360,3 +364,109 @@ def tesla_ok(world):
 @then("슈퍼차저 갱신 결과는 실패다")
 def tesla_failed(world):
     assert world.result is False
+
+
+# ---------- 필터 / 좌표 검증 ----------
+
+@given(parsers.re(r'이용제한 사유가 "(?P<limit_detail>.*)"이고 이용시간이 "(?P<use_time>.*)"인 충전소가 있다'))
+def station_with_texts(world, limit_detail, use_time):
+    world.item = {**gov_item("부산", 0), "limitDetail": limit_detail, "useTime": use_time}
+
+
+@when("지도에 올릴 충전소인지 판정하면")
+def judge_filter(world):
+    world.result = gov_charger_api.passes_filter(world.item)
+
+
+@then("그 충전소는 제외된다")
+def station_excluded(world):
+    assert world.result is False
+
+
+@then("그 충전소는 포함된다")
+def station_included(world):
+    assert world.result is True
+
+
+@when(parsers.re(r'주소 "(?P<addr>.*)"와 좌표 (?P<lat>[\d.]+), (?P<lng>[\d.]+)가 맞는지 확인하면'))
+def check_coordinates(world, addr, lat, lng):
+    world.result = address_parser.coordinates_plausible(addr, float(lat), float(lng))
+
+
+@then(parsers.parse("좌표 검증 결과는 {expected}이다"))
+def coordinates_result(world, expected):
+    assert world.result is (expected == "일치")
+
+
+# ---------- 이용시간 ----------
+
+def _clock(minutes):
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+@when(parsers.re(r'이용시간 "(?P<text>.*)"를 해석하면'))
+def parse_hours(world, text):
+    world.result = operating_hours.parse_use_time(text)
+
+
+@then(parsers.parse("운영 형태는 {kind}이고 시각은 {times}이다"))
+def hours_result(world, kind, times):
+    hours = world.result
+    assert hours["kind"] == kind
+    actual = []
+    if "start" in hours:
+        actual.append(f"{_clock(hours['start'])}~{_clock(hours['end'])}")
+    if "weekendStart" in hours:
+        actual.append(f"{_clock(hours['weekendStart'])}~{_clock(hours['weekendEnd'])}")
+    assert (" ".join(actual) or "-") == times
+
+
+# ---------- 호출 횟수 ----------
+
+@then(parsers.parse("정부 API는 {count:d}번 호출되었다"))
+def gov_call_count(world, count):
+    assert len(world.gov_api.calls) == count
+
+
+# ---------- 카카오 ----------
+
+@given("카카오 API 키가 설정되어 있다")
+def kakao_key(world):
+    world.monkeypatch.setenv("KAKAO_REST_API_KEY", "test-kakao-key")
+    world.kakao_calls = 0
+
+
+def _install_kakao(world, failures_before_success):
+    def fake_fetch(_url, **_kwargs):
+        world.kakao_calls += 1
+        if failures_before_success is None or world.kakao_calls <= failures_before_success:
+            raise http_client.FetchError("시간 초과(테스트)")
+        return {"documents": [{"x": "127.0", "y": "37.5"}]}
+
+    world.monkeypatch.setattr(kakao_geocoder, "fetch_json", fake_fetch)
+
+
+@given("카카오 API가 계속 실패한다")
+def kakao_always_fails(world):
+    _install_kakao(world, None)
+
+
+@given(parsers.parse("카카오 API가 {count:d}번 실패한 뒤 정상 응답한다"))
+def kakao_recovers(world, count):
+    _install_kakao(world, count)
+
+
+@when(parsers.parse("주소 {count:d}개의 좌표를 차례로 조회하면"))
+def geocode_many(world, count):
+    world.result = [kakao_geocoder.geocode_address(f"서울특별시 종로구 테스트로 {i}") for i in range(count)]
+
+
+@then(parsers.parse("카카오 API는 {count:d}번만 호출되었다"))
+@then(parsers.parse("카카오 API는 {count:d}번 호출되었다"))
+def kakao_call_count(world, count):
+    assert world.kakao_calls == count
+
+
+@then("좌표 조회 결과는 모두 없음이다")
+def geocode_all_none(world):
+    assert all(r is None for r in world.result)

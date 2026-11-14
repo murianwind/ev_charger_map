@@ -24,6 +24,13 @@ KAKAO_KEYWORD_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json"
 # 교체한다. GPS 오차나 지오코딩 자체의 오차 범위를 감안한 여유값이다.
 MISMATCH_THRESHOLD_KM = 3.0
 
+# 카카오 API는 평소 1초 안에 응답한다. 장애 때 충전소 수천 곳이 저마다 긴
+# 시간 초과를 기다리면 갱신 작업이 몇 시간씩 러너를 붙잡으므로, 짧게
+# 기다리고, 연속으로 이만큼 실패하면 이번 실행에서는 더 호출하지 않는다.
+KAKAO_TIMEOUT_SEC = 10
+MAX_CONSECUTIVE_FAILURES = 5
+_consecutive_failures = 0
+
 # 좌표 근처에서 이 키워드로 장소를 검색해 실제 등록된 한글 이름을 찾는다
 # (예: 테슬라 슈퍼차저의 영문 사이트명을 한글 장소명으로 대체하기 위함).
 NEARBY_PLACE_SEARCH_RADIUS_M = 300
@@ -43,13 +50,20 @@ def _kakao_documents(url):
     구분할 필요 없이 그냥 폴백하면 되기 때문이다. geocode_address/
     reverse_geocode/find_nearby_place_name 세 함수가 공통으로 쓴다.
     """
+    global _consecutive_failures
     key = os.environ.get("KAKAO_REST_API_KEY")
-    if not key:
+    if not key or _consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
         return None
     try:
-        data = fetch_json(url, extra_headers={"Authorization": f"KakaoAK {key}"})
+        data = fetch_json(
+            url, extra_headers={"Authorization": f"KakaoAK {key}"}, timeout_sec=KAKAO_TIMEOUT_SEC
+        )
     except Exception:  # noqa: BLE001 - 지오코딩 실패는 전체 실행을 막지 않고 건너뛴다
+        _consecutive_failures += 1
+        if _consecutive_failures == MAX_CONSECUTIVE_FAILURES:
+            print(f"경고: 카카오 API가 {MAX_CONSECUTIVE_FAILURES}번 연속 실패 — 이번 실행에서는 더 호출하지 않습니다.")
         return None
+    _consecutive_failures = 0
     return data.get("documents") or None
 
 

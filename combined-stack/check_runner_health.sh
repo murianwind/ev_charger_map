@@ -16,9 +16,9 @@ set -e
 
 REPO_PATH="${REPO_URL#https://github.com/}"
 
-RESPONSE=$(curl -s -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+RESPONSE=$(curl -s --max-time 30 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
-  "https://api.github.com/repos/${REPO_PATH}/actions/runners")
+  "https://api.github.com/repos/${REPO_PATH}/actions/runners") || RESPONSE=""
 
 # API 호출 자체가 실패했거나(일시적 네트워크 문제, 한도 초과 등) 응답이
 # 러너 목록 형태가 아니면 러너 상태를 알 수 없는 것이지 오프라인인 게
@@ -39,7 +39,7 @@ echo "[health] 러너 비정상(상태: ${STATUS:-확인불가}) — 재시작�
 
 if [ -n "$DISCORD_WEBHOOK_URL" ]; then
   MESSAGE="⚠️ EV 충전지도 러너(${RUNNER_NAME})가 오프라인입니다 (상태: ${STATUS:-확인불가}). 컨테이너 재시작을 시도합니다."
-  curl -s -X POST -H "Content-Type: application/json" \
+  curl -s --max-time 30 -X POST -H "Content-Type: application/json" \
     -d "$(jq -n --arg content "$MESSAGE" '{content: $content}')" \
     "$DISCORD_WEBHOOK_URL" > /dev/null || echo "[health] 디스코드 알림 전송 실패(무시하고 계속 진행)"
 fi
