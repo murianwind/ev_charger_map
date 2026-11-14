@@ -168,15 +168,21 @@ ALL_ZCODES = {z for group in DAY_ZCODE_GROUPS for z in group}
 # 썼는데, 부산(3만여 건) 기준 33페이지 -> 4페이지로 거의 8배 줄었다.
 MAX_NUM_OF_ROWS = 9999
 
-# 정부 API는 간헐적으로 "정상 JSON인데 item이 비어 있는" 응답을 준다(대량
-# 호출 직후에 주로 관측됨). 완전 수집이 필요한 조회에서 이런 빈 페이지를
-# 받으면 잠깐 쉬었다가 같은 페이지를 다시 요청한다.
-EMPTY_PAGE_RETRIES = 2
-EMPTY_PAGE_RETRY_WAIT_SEC = 20
+# 정부 API(data.go.kr 게이트웨이)는 간헐적으로 요청한 데이터 대신 오류 봉투
+# ({"OpenAPI_ServiceResponse": {...}})나 item이 빈 응답을 준다. 같은 페이지를
+# 잠깐 쉬었다가 다시 요청하면 대개 정상 응답이 온다. 횟수는 페이지마다
+# 새로 센다 — 여러 페이지에서 한 번씩 오류가 나도 끝까지 받을 수 있게.
+PAGE_RETRIES = 3
+PAGE_RETRY_WAIT_SEC = 20
+GATEWAY_ERROR_KEY = "OpenAPI_ServiceResponse"
 
 
 class ApiResponseError(RuntimeError):
     """API가 오류 resultCode를 돌려줬을 때."""
+
+
+class GatewayError(ApiResponseError):
+    """data.go.kr 게이트웨이가 데이터 대신 오류 봉투를 돌려줬을 때(일시적인 경우가 많다)."""
 
 
 class IncompleteFetchError(RuntimeError):
@@ -215,6 +221,14 @@ def _fetch_page(operation, service_key, page_no, num_of_rows, extra_params):
     url = _build_url(operation, service_key, page_no, num_of_rows, extra_params)
     data = fetch_json(url, quota_marker=QUOTA_MARKER)
 
+    if GATEWAY_ERROR_KEY in data:
+        envelope = data[GATEWAY_ERROR_KEY]
+        header = envelope.get("cmmMsgHeader", envelope) if isinstance(envelope, dict) else {}
+        raise GatewayError(
+            f"게이트웨이 오류(errMsg={header.get('errMsg')!r}, returnAuthMsg={header.get('returnAuthMsg')!r}, "
+            f"returnReasonCode={header.get('returnReasonCode')!r})"
+        )
+
     result_code = data.get("resultCode")
     if result_code not in (None, "00"):
         raise ApiResponseError(f"API 오류(resultCode={result_code}): {data.get('resultMsg')}")
@@ -223,16 +237,26 @@ def _fetch_page(operation, service_key, page_no, num_of_rows, extra_params):
     page_items = page_items.get("item", []) if isinstance(page_items, dict) else []
     if isinstance(page_items, dict):
         page_items = [page_items]
-
-    if not page_items:
-        # 빈 응답이 실제로 어떤 모양인지 로그에 남긴다(원인 추적용 — 키 이름과
-        # 결과 코드만 찍고 본문/인증키는 찍지 않는다).
-        print(
-            f"[{operation}]   빈 페이지 {page_no}: resultCode={result_code!r} "
-            f"resultMsg={data.get('resultMsg')!r} totalCount={data.get('totalCount')!r} "
-            f"keys={sorted(data.keys())}"
-        )
     return page_items, int(data.get("totalCount") or 0)
+
+
+def _fetch_page_with_retry(operation, service_key, page_no, num_of_rows, extra_params, retry_empty):
+    """_fetch_page에 재시도를 붙인 것. 게이트웨이 오류는 항상, 빈 페이지는
+    retry_empty일 때만 PAGE_RETRIES번까지 다시 요청한다. 끝까지 게이트웨이
+    오류면 GatewayError를 내고, 끝까지 비어 있으면 빈 리스트를 돌려준다."""
+    for attempt in range(PAGE_RETRIES + 1):
+        last_attempt = attempt == PAGE_RETRIES
+        try:
+            page_items, total_count = _fetch_page(operation, service_key, page_no, num_of_rows, extra_params)
+        except GatewayError as err:
+            if last_attempt:
+                raise
+            print(f"[{operation}]   페이지 {page_no} {err} — {PAGE_RETRY_WAIT_SEC}초 뒤 다시 요청({attempt + 1}/{PAGE_RETRIES})")
+        else:
+            if page_items or not retry_empty or last_attempt:
+                return page_items, total_count
+            print(f"[{operation}]   페이지 {page_no}가 비어 있음(totalCount={total_count}) — {PAGE_RETRY_WAIT_SEC}초 뒤 다시 요청({attempt + 1}/{PAGE_RETRIES})")
+        time.sleep(PAGE_RETRY_WAIT_SEC)
 
 
 def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_NUM_OF_ROWS,
@@ -246,24 +270,24 @@ def _fetch_all_pages(operation, service_key, extra_params=None, num_of_rows=MAX_
     멈춘다 — 조회 도중 건수가 계속 변해 totalCount와 실제 건수가 어긋나는
     델타 피드(getChargerStatus)용이다. 덜 찬 페이지에서 멈추지 않으면
     totalCount를 채우려고 있지도 않은 다음 페이지를 한 번 더 요청하게 된다.
+
+    게이트웨이 오류 응답은 두 경우 모두 "받은 게 없다"가 아니라 "실패"다 —
+    다시 요청해도 계속되면 GatewayError를 그대로 올린다.
     """
     items = []
     page_no = 1
     total_count = None
-    empty_retries_left = EMPTY_PAGE_RETRIES if require_complete else 0
 
     while True:
-        page_items, reported_total = _fetch_page(operation, service_key, page_no, num_of_rows, extra_params)
+        page_items, reported_total = _fetch_page_with_retry(
+            operation, service_key, page_no, num_of_rows, extra_params, retry_empty=require_complete
+        )
         if total_count is None or (not items and reported_total):
             total_count = reported_total
 
         if not page_items:
             if not require_complete:
                 break
-            if empty_retries_left > 0:
-                empty_retries_left -= 1
-                time.sleep(EMPTY_PAGE_RETRY_WAIT_SEC)
-                continue
             raise IncompleteFetchError(
                 f"{operation} {extra_params}: {len(items)}/{total_count}건만 수집됨(페이지 {page_no}가 비어 있음)"
             )
@@ -470,6 +494,8 @@ def fetch_status_delta(service_key, period_min):
     period를 항상 10분/10 이하로 맞춰야 한다.
 
     한도초과 쿨다운 중이거나, 이번 호출에서 한도초과가 감지되면 None을 반환한다.
+    API가 오류 응답만 주면 ApiResponseError를 낸다 — "변경분 0건"으로 넘기면
+    그 10분 구간의 상태 변경을 잃은 사실이 드러나지 않는다.
     """
     if in_cooldown():
         print("[gov_charger_api] 오늘 API 한도 초과로 쿨다운 중 — 상태 갱신 건너뜀")
