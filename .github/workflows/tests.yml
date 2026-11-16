@@ -2,10 +2,10 @@ name: Tests
 
 on:
   pull_request:
-    paths: ["scripts/**", "tests/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
+    paths: ["scripts/**", "tests/**", "combined-stack/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
   push:
     branches: [main]
-    paths: ["scripts/**", "tests/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
+    paths: ["scripts/**", "tests/**", "combined-stack/**", "requirements-dev.txt", ".github/workflows/tests.yml"]
 
 permissions:
   contents: read

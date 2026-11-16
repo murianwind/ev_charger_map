@@ -4,6 +4,9 @@
 바꿔 끼우고, geojson/스냅샷/쿨다운 파일은 테스트마다 임시 폴더에 둔다.
 """
 import json
+import os
+import shutil
+import subprocess
 import sys
 import urllib.parse
 from pathlib import Path
@@ -546,3 +549,66 @@ def no_status_record(world):
 @then(parsers.parse("지도의 마지막 상태 갱신은 {count:d}건 반영이다"))
 def status_record(world, count):
     assert _load_map()["meta"]["lastStatusUpdate"]["updated"] == count
+
+
+# ---------- 홈 스케줄러의 재시도 요청 스크립트 ----------
+
+RETRY_SCRIPT = Path(__file__).parent.parent / "combined-stack" / "retry_failed_update.sh"
+
+
+def _write_executable(path, content):
+    path.write_text(content, encoding="utf-8")
+    path.chmod(0o755)
+
+
+@pytest.fixture
+def scheduler(tmp_path):
+    """스크립트를 임시 폴더로 복사하고, curl과 trigger_workflow.sh를 가짜로 바꾼다.
+    가짜 curl은 response.json을 그대로 출력하고(없으면 연결 실패처럼 종료 코드 7),
+    가짜 trigger_workflow.sh는 받은 인자를 dispatched.txt에 적는다."""
+    scripts_dir = tmp_path / "repo_scripts"
+    bin_dir = tmp_path / "bin"
+    scripts_dir.mkdir()
+    bin_dir.mkdir()
+    shutil.copy(RETRY_SCRIPT, scripts_dir / RETRY_SCRIPT.name)
+    _write_executable(
+        scripts_dir / "trigger_workflow.sh",
+        f'#!/bin/bash\necho "$@" >> "{tmp_path}/dispatched.txt"\n',
+    )
+    _write_executable(
+        bin_dir / "curl",
+        f'#!/bin/bash\n[ -f "{tmp_path}/response.json" ] || exit 7\ncat "{tmp_path}/response.json"\n',
+    )
+    return tmp_path
+
+
+@given(parsers.parse('최근 지역 갱신 실행 결과가 최신순으로 "{conclusions}"이다'))
+def recent_run_conclusions(scheduler, conclusions):
+    runs = [{"conclusion": c.strip()} for c in conclusions.split(",")]
+    (scheduler / "response.json").write_text(json.dumps({"workflow_runs": runs}), encoding="utf-8")
+
+
+@given("GitHub API가 응답하지 않는다")
+def github_api_down(scheduler):
+    assert not (scheduler / "response.json").exists()
+
+
+@when("재시도 스케줄이 돌면")
+def run_retry_schedule(scheduler):
+    env = {
+        "PATH": f"{scheduler / 'bin'}:{os.environ['PATH']}",
+        "ACCESS_TOKEN": "test-token",
+        "REPO_URL": "https://github.com/example/repo",
+    }
+    subprocess.run(
+        ["bash", str(scheduler / "repo_scripts" / RETRY_SCRIPT.name)], env=env, check=True, capture_output=True
+    )
+
+
+@then(parsers.parse("재시도 요청은 {expected}"))
+def retry_dispatch_result(scheduler, expected):
+    dispatched = scheduler / "dispatched.txt"
+    if expected == "보내진다":
+        assert dispatched.read_text(encoding="utf-8").strip() == 'update-chargers.yml {"retry_pending":"true"}'
+    else:
+        assert not dispatched.exists()

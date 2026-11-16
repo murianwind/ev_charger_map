@@ -16,9 +16,10 @@ RUN apt-get update \
 COPY crontab /etc/cron.d/ev-charger-cron
 COPY trigger_workflow.sh /repo_scripts/trigger_workflow.sh
 COPY check_runner_health.sh /repo_scripts/check_runner_health.sh
+COPY retry_failed_update.sh /repo_scripts/retry_failed_update.sh
 COPY wrapper-entrypoint.sh /wrapper-entrypoint.sh
 
-RUN chmod +x /repo_scripts/trigger_workflow.sh /repo_scripts/check_runner_health.sh /wrapper-entrypoint.sh \
+RUN chmod +x /repo_scripts/trigger_workflow.sh /repo_scripts/check_runner_health.sh /repo_scripts/retry_failed_update.sh /wrapper-entrypoint.sh \
     && chmod 0644 /etc/cron.d/ev-charger-cron \
     && touch /var/log/cron.log
 
