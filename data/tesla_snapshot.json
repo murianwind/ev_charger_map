@@ -1,6 +1,6 @@
 {
  "source": "supercharge.info",
- "updatedAt": "2026-11-13T04:02:20+09:00",
+ "updatedAt": "2026-11-28T10:29:32+09:00",
  "stations": [
   {
    "statId": "TESLA-10825",
@@ -21,9 +21,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 325kW",
-   "chargers": [],
    "lat": 36.320066,
-   "lng": 127.070771
+   "lng": 127.070771,
+   "chargers": []
   },
   {
    "statId": "TESLA-10826",
@@ -44,9 +44,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 325kW",
-   "chargers": [],
    "lat": 36.351948,
-   "lng": 127.068932
+   "lng": 127.068932,
+   "chargers": []
   },
   {
    "statId": "TESLA-10828",
@@ -67,9 +67,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 325kW",
-   "chargers": [],
    "lat": 36.571868,
-   "lng": 127.112998
+   "lng": 127.112998,
+   "chargers": []
   },
   {
    "statId": "TESLA-10827",
@@ -90,9 +90,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 325kW",
-   "chargers": [],
    "lat": 36.568583,
-   "lng": 127.114253
+   "lng": 127.114253,
+   "chargers": []
   },
   {
    "statId": "TESLA-10835",
@@ -113,9 +113,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V4 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.383192,
-   "lng": 126.854965
+   "lng": 126.854965,
+   "chargers": []
   },
   {
    "statId": "TESLA-10834",
@@ -136,9 +136,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V4 4개) 최대 250kW",
-   "chargers": [],
    "lat": 37.384386,
-   "lng": 126.856749
+   "lng": 126.856749,
+   "chargers": []
   },
   {
    "statId": "TESLA-8065",
@@ -159,9 +159,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.192775,
-   "lng": 127.046176
+   "lng": 127.046176,
+   "chargers": []
   },
   {
    "statId": "TESLA-10830",
@@ -182,9 +182,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 325kW",
-   "chargers": [],
    "lat": 37.609702,
-   "lng": 128.463859
+   "lng": 128.463859,
+   "chargers": []
   },
   {
    "statId": "TESLA-8560",
@@ -205,9 +205,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V4 4개) 최대 250kW",
-   "chargers": [],
    "lat": 36.990721,
-   "lng": 129.404196
+   "lng": 129.404196,
+   "chargers": []
   },
   {
    "statId": "TESLA-11260",
@@ -228,9 +228,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V4 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.185961,
-   "lng": 128.830887
+   "lng": 128.830887,
+   "chargers": []
   },
   {
    "statId": "TESLA-11330",
@@ -251,9 +251,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.816881,
-   "lng": 129.203768
+   "lng": 129.203768,
+   "chargers": []
   },
   {
    "statId": "TESLA-3594",
@@ -274,9 +274,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 4개, V4 4개) 최대 250kW",
-   "chargers": [],
    "lat": 37.200809,
-   "lng": 127.097418
+   "lng": 127.097418,
+   "chargers": []
   },
   {
    "statId": "TESLA-11524",
@@ -297,9 +297,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 306kW",
-   "chargers": [],
    "lat": 34.886559,
-   "lng": 128.416615
+   "lng": 128.416615,
+   "chargers": []
   },
   {
    "statId": "TESLA-11526",
@@ -320,9 +320,55 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.559616,
-   "lng": 126.835982
+   "lng": 126.835982,
+   "chargers": []
+  },
+  {
+   "statId": "TESLA-11528",
+   "statNm": "Deokpyeong Rest Area - Gangneung",
+   "addr": "경기 이천시 마장면 각평리 산 21-3",
+   "addrDetail": "",
+   "location": "",
+   "useTime": "24시간 이용가능",
+   "hours": {
+    "kind": "always"
+   },
+   "busiNm": "테슬라",
+   "busiCall": "",
+   "parkingFree": "Y",
+   "limitYn": "N",
+   "limitDetail": "",
+   "floorType": "",
+   "floorNum": "",
+   "isTesla": true,
+   "teslaSummary": "충전기 8개 (V4 8개) 최대 500kW",
+   "lat": 37.242566,
+   "lng": 127.390255,
+   "chargers": []
+  },
+  {
+   "statId": "TESLA-11527",
+   "statNm": "Deokpyeong Rest Area - Incheon",
+   "addr": "경기도 이천시 마장면 덕이로154번길 287-76",
+   "addrDetail": "",
+   "location": "",
+   "useTime": "24시간 이용가능",
+   "hours": {
+    "kind": "always"
+   },
+   "busiNm": "테슬라",
+   "busiCall": "",
+   "parkingFree": "Y",
+   "limitYn": "N",
+   "limitDetail": "",
+   "floorType": "",
+   "floorNum": "",
+   "isTesla": true,
+   "teslaSummary": "충전기 8개 (V4 8개) 최대 500kW",
+   "lat": 37.2415,
+   "lng": 127.391,
+   "chargers": []
   },
   {
    "statId": "TESLA-11453",
@@ -343,9 +389,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.6985,
-   "lng": 126.6837
+   "lng": 126.6837,
+   "chargers": []
   },
   {
    "statId": "TESLA-7829",
@@ -366,9 +412,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.266222,
-   "lng": 126.999965
+   "lng": 126.999965,
+   "chargers": []
   },
   {
    "statId": "TESLA-4395",
@@ -389,9 +435,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.988973,
-   "lng": 127.265732
+   "lng": 127.265732,
+   "chargers": []
   },
   {
    "statId": "TESLA-4146",
@@ -412,9 +458,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.22269,
-   "lng": 128.68126
+   "lng": 128.68126,
+   "chargers": []
   },
   {
    "statId": "TESLA-3946",
@@ -435,9 +481,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.654083,
-   "lng": 128.749412
+   "lng": 128.749412,
+   "chargers": []
   },
   {
    "statId": "TESLA-3778",
@@ -458,9 +504,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.293423,
-   "lng": 127.070231
+   "lng": 127.070231,
+   "chargers": []
   },
   {
    "statId": "TESLA-3947",
@@ -481,9 +527,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.072695,
-   "lng": 128.191443
+   "lng": 128.191443,
+   "chargers": []
   },
   {
    "statId": "TESLA-4145",
@@ -504,9 +550,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V3 12개) 최대 250kW",
-   "chargers": [],
    "lat": 36.059093,
-   "lng": 129.320555
+   "lng": 129.320555,
+   "chargers": []
   },
   {
    "statId": "TESLA-4142",
@@ -527,9 +573,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.66529,
-   "lng": 127.4993
+   "lng": 127.4993,
+   "chargers": []
   },
   {
    "statId": "TESLA-6242",
@@ -550,9 +596,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.685276,
-   "lng": 128.757475
+   "lng": 128.757475,
+   "chargers": []
   },
   {
    "statId": "TESLA-6109",
@@ -573,9 +619,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.591222,
-   "lng": 128.631771
+   "lng": 128.631771,
+   "chargers": []
   },
   {
    "statId": "TESLA-5940",
@@ -596,9 +642,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.514178,
-   "lng": 129.102874
+   "lng": 129.102874,
+   "chargers": []
   },
   {
    "statId": "TESLA-4114",
@@ -619,9 +665,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.28668,
-   "lng": 127.055814
+   "lng": 127.055814,
+   "chargers": []
   },
   {
    "statId": "TESLA-6058",
@@ -642,9 +688,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.941454,
-   "lng": 126.810368
+   "lng": 126.810368,
+   "chargers": []
   },
   {
    "statId": "TESLA-4144",
@@ -665,9 +711,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.80698,
-   "lng": 127.11566
+   "lng": 127.11566,
+   "chargers": []
   },
   {
    "statId": "TESLA-6057",
@@ -688,9 +734,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.498202,
-   "lng": 126.860354
+   "lng": 126.860354,
+   "chargers": []
   },
   {
    "statId": "TESLA-1418",
@@ -711,9 +757,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 7개 (V2 4개, V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 38.180856,
-   "lng": 128.611593
+   "lng": 128.611593,
+   "chargers": []
   },
   {
    "statId": "TESLA-6934",
@@ -734,9 +780,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.179905,
-   "lng": 128.447073
+   "lng": 128.447073,
+   "chargers": []
   },
   {
    "statId": "TESLA-4397",
@@ -757,9 +803,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.511499,
-   "lng": 127.098247
+   "lng": 127.098247,
+   "chargers": []
   },
   {
    "statId": "TESLA-6552",
@@ -780,9 +826,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.099323,
-   "lng": 129.022323
+   "lng": 129.022323,
+   "chargers": []
   },
   {
    "statId": "TESLA-5051",
@@ -803,9 +849,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.5026,
-   "lng": 126.775
+   "lng": 126.775,
+   "chargers": []
   },
   {
    "statId": "TESLA-4394",
@@ -826,9 +872,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.850434,
-   "lng": 129.277112
+   "lng": 129.277112,
+   "chargers": []
   },
   {
    "statId": "TESLA-5019",
@@ -849,9 +895,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 38.0053,
-   "lng": 128.289
+   "lng": 128.289,
+   "chargers": []
   },
   {
    "statId": "TESLA-5628",
@@ -872,9 +918,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 34.807314,
-   "lng": 126.425745
+   "lng": 126.425745,
+   "chargers": []
   },
   {
    "statId": "TESLA-6405",
@@ -895,9 +941,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.989006,
-   "lng": 127.118677
+   "lng": 127.118677,
+   "chargers": []
   },
   {
    "statId": "TESLA-5761",
@@ -918,9 +964,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.695857,
-   "lng": 128.892696
+   "lng": 128.892696,
+   "chargers": []
   },
   {
    "statId": "TESLA-5726",
@@ -941,9 +987,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 38.316114,
-   "lng": 128.531046
+   "lng": 128.531046,
+   "chargers": []
   },
   {
    "statId": "TESLA-5739",
@@ -964,9 +1010,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 11개 (V3 11개) 최대 250kW",
-   "chargers": [],
    "lat": 37.66556,
-   "lng": 126.754793
+   "lng": 126.754793,
+   "chargers": []
   },
   {
    "statId": "TESLA-5763",
@@ -987,9 +1033,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.429414,
-   "lng": 129.183007
+   "lng": 129.183007,
+   "chargers": []
   },
   {
    "statId": "TESLA-5753",
@@ -1010,9 +1056,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.506953,
-   "lng": 127.065521
+   "lng": 127.065521,
+   "chargers": []
   },
   {
    "statId": "TESLA-3864",
@@ -1033,9 +1079,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.586685,
-   "lng": 128.322039
+   "lng": 128.322039,
+   "chargers": []
   },
   {
    "statId": "TESLA-12161",
@@ -1056,9 +1102,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.631667,
-   "lng": 126.849732
+   "lng": 126.849732,
+   "chargers": []
   },
   {
    "statId": "TESLA-12162",
@@ -1079,9 +1125,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.63117,
-   "lng": 126.851863
+   "lng": 126.851863,
+   "chargers": []
   },
   {
    "statId": "TESLA-9310",
@@ -1102,9 +1148,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.277662,
-   "lng": 128.714763
+   "lng": 128.714763,
+   "chargers": []
   },
   {
    "statId": "TESLA-9309",
@@ -1125,9 +1171,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 10개 (V3 10개) 최대 250kW",
-   "chargers": [],
    "lat": 36.37512,
-   "lng": 127.391838
+   "lng": 127.391838,
+   "chargers": []
   },
   {
    "statId": "TESLA-9308",
@@ -1148,9 +1194,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V4 4개, 기타 4개) 최대 250kW",
-   "chargers": [],
    "lat": 38.191518,
-   "lng": 128.591151
+   "lng": 128.591151,
+   "chargers": []
   },
   {
    "statId": "TESLA-10010",
@@ -1171,9 +1217,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.79848,
-   "lng": 127.101534
+   "lng": 127.101534,
+   "chargers": []
   },
   {
    "statId": "TESLA-10008",
@@ -1194,9 +1240,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V3 4개) 최대 250kW",
-   "chargers": [],
    "lat": 36.312761,
-   "lng": 127.318712
+   "lng": 127.318712,
+   "chargers": []
   },
   {
    "statId": "TESLA-10046",
@@ -1217,9 +1263,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V4 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.700836,
-   "lng": 127.543466
+   "lng": 127.543466,
+   "chargers": []
   },
   {
    "statId": "TESLA-10045",
@@ -1240,9 +1286,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V4 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.702704,
-   "lng": 127.546767
+   "lng": 127.546767,
+   "chargers": []
   },
   {
    "statId": "TESLA-5754",
@@ -1263,9 +1309,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.245632,
-   "lng": 127.062206
+   "lng": 127.062206,
+   "chargers": []
   },
   {
    "statId": "TESLA-7146",
@@ -1286,9 +1332,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.429588,
-   "lng": 126.636677
+   "lng": 126.636677,
+   "chargers": []
   },
   {
    "statId": "TESLA-6502",
@@ -1309,9 +1355,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.571692,
-   "lng": 126.983398
+   "lng": 126.983398,
+   "chargers": []
   },
   {
    "statId": "TESLA-4335",
@@ -1332,9 +1378,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.4838519,
-   "lng": 126.930193
+   "lng": 126.930193,
+   "chargers": []
   },
   {
    "statId": "TESLA-8555",
@@ -1355,9 +1401,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V3 4개) 최대 250kW",
-   "chargers": [],
    "lat": 37.597782,
-   "lng": 127.089543
+   "lng": 127.089543,
+   "chargers": []
   },
   {
    "statId": "TESLA-7963",
@@ -1378,9 +1424,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.54427,
-   "lng": 127.05426
+   "lng": 127.05426,
+   "chargers": []
   },
   {
    "statId": "TESLA-3793",
@@ -1401,9 +1447,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.39301,
-   "lng": 126.96228
+   "lng": 126.96228,
+   "chargers": []
   },
   {
    "statId": "TESLA-3928",
@@ -1424,9 +1470,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.645455,
-   "lng": 126.63037
+   "lng": 126.63037,
+   "chargers": []
   },
   {
    "statId": "TESLA-4348",
@@ -1447,9 +1493,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.403372,
-   "lng": 127.22335
+   "lng": 127.22335,
+   "chargers": []
   },
   {
    "statId": "TESLA-3355",
@@ -1470,9 +1516,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.13485,
-   "lng": 126.895718
+   "lng": 126.895718,
+   "chargers": []
   },
   {
    "statId": "TESLA-3703",
@@ -1493,9 +1539,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.470798,
-   "lng": 126.665855
+   "lng": 126.665855,
+   "chargers": []
   },
   {
    "statId": "TESLA-3356",
@@ -1516,9 +1562,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.9422,
-   "lng": 127.43131
+   "lng": 127.43131,
+   "chargers": []
   },
   {
    "statId": "TESLA-3903",
@@ -1539,9 +1585,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.053481,
-   "lng": 127.08031
+   "lng": 127.08031,
+   "chargers": []
   },
   {
    "statId": "TESLA-3475",
@@ -1562,9 +1608,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.503216,
-   "lng": 127.04162
+   "lng": 127.04162,
+   "chargers": []
   },
   {
    "statId": "TESLA-3630",
@@ -1585,9 +1631,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.66375,
-   "lng": 127.00871
+   "lng": 127.00871,
+   "chargers": []
   },
   {
    "statId": "TESLA-3462",
@@ -1608,9 +1654,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.47984,
-   "lng": 126.8953
+   "lng": 126.8953,
+   "chargers": []
   },
   {
    "statId": "TESLA-3500",
@@ -1631,9 +1677,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.48406,
-   "lng": 127.01732
+   "lng": 127.01732,
+   "chargers": []
   },
   {
    "statId": "TESLA-3477",
@@ -1654,9 +1700,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.5604,
-   "lng": 127.0386
+   "lng": 127.0386,
+   "chargers": []
   },
   {
    "statId": "TESLA-6021",
@@ -1677,9 +1723,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.108823,
-   "lng": 128.345332
+   "lng": 128.345332,
+   "chargers": []
   },
   {
    "statId": "TESLA-6123",
@@ -1700,9 +1746,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.603892,
-   "lng": 126.822075
+   "lng": 126.822075,
+   "chargers": []
   },
   {
    "statId": "TESLA-6100",
@@ -1723,9 +1769,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.196185,
-   "lng": 127.446084
+   "lng": 127.446084,
+   "chargers": []
   },
   {
    "statId": "TESLA-3948",
@@ -1746,9 +1792,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 38.054626,
-   "lng": 128.660877
+   "lng": 128.660877,
+   "chargers": []
   },
   {
    "statId": "TESLA-4105",
@@ -1769,9 +1815,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 36.500458,
-   "lng": 127.256765
+   "lng": 127.256765,
+   "chargers": []
   },
   {
    "statId": "TESLA-4305",
@@ -1792,9 +1838,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.519982,
-   "lng": 127.018977
+   "lng": 127.018977,
+   "chargers": []
   },
   {
    "statId": "TESLA-6090",
@@ -1815,9 +1861,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.489749,
-   "lng": 127.029875
+   "lng": 127.029875,
+   "chargers": []
   },
   {
    "statId": "TESLA-1196",
@@ -1838,9 +1884,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 35.160676,
-   "lng": 129.163823
+   "lng": 129.163823,
+   "chargers": []
   },
   {
    "statId": "TESLA-4104",
@@ -1861,9 +1907,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.306315,
-   "lng": 126.900404
+   "lng": 126.900404,
+   "chargers": []
   },
   {
    "statId": "TESLA-3332",
@@ -1884,9 +1930,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.0016,
-   "lng": 127.83573
+   "lng": 127.83573,
+   "chargers": []
   },
   {
    "statId": "TESLA-3476",
@@ -1907,9 +1953,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.9229,
-   "lng": 128.63571
+   "lng": 128.63571,
+   "chargers": []
   },
   {
    "statId": "TESLA-4143",
@@ -1930,9 +1976,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.82726,
-   "lng": 128.62369
+   "lng": 128.62369,
+   "chargers": []
   },
   {
    "statId": "TESLA-3627",
@@ -1953,9 +1999,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.375635,
-   "lng": 127.00947
+   "lng": 127.00947,
+   "chargers": []
   },
   {
    "statId": "TESLA-6131",
@@ -1976,9 +2022,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.977367,
-   "lng": 127.487175
+   "lng": 127.487175,
+   "chargers": []
   },
   {
    "statId": "TESLA-4334",
@@ -1999,9 +2045,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.216576,
-   "lng": 126.849241
+   "lng": 126.849241,
+   "chargers": []
   },
   {
    "statId": "TESLA-7211",
@@ -2022,9 +2068,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.15985,
-   "lng": 126.881908
+   "lng": 126.881908,
+   "chargers": []
   },
   {
    "statId": "TESLA-3725",
@@ -2045,9 +2091,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.41917204,
-   "lng": 126.88211751
+   "lng": 126.88211751,
+   "chargers": []
   },
   {
    "statId": "TESLA-6079",
@@ -2068,9 +2114,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.568233,
-   "lng": 127.196853
+   "lng": 127.196853,
+   "chargers": []
   },
   {
    "statId": "TESLA-6081",
@@ -2091,9 +2137,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.218821,
-   "lng": 127.054524
+   "lng": 127.054524,
+   "chargers": []
   },
   {
    "statId": "TESLA-5765",
@@ -2114,9 +2160,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.440553,
-   "lng": 126.457492
+   "lng": 126.457492,
+   "chargers": []
   },
   {
    "statId": "TESLA-1804",
@@ -2137,9 +2183,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 35.1802627,
-   "lng": 128.1397201
+   "lng": 128.1397201,
+   "chargers": []
   },
   {
    "statId": "TESLA-6881",
@@ -2160,9 +2206,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.653969,
-   "lng": 127.319334
+   "lng": 127.319334,
+   "chargers": []
   },
   {
    "statId": "TESLA-6155",
@@ -2183,9 +2229,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.384052,
-   "lng": 127.123452
+   "lng": 127.123452,
+   "chargers": []
   },
   {
    "statId": "TESLA-1459",
@@ -2206,9 +2252,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.403642,
-   "lng": 127.109051
+   "lng": 127.109051,
+   "chargers": []
   },
   {
    "statId": "TESLA-4115",
@@ -2229,9 +2275,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.395597,
-   "lng": 127.112063
+   "lng": 127.112063,
+   "chargers": []
   },
   {
    "statId": "TESLA-6080",
@@ -2252,9 +2298,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.385942,
-   "lng": 127.12055
+   "lng": 127.12055,
+   "chargers": []
   },
   {
    "statId": "TESLA-3813",
@@ -2275,9 +2321,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.579635,
-   "lng": 127.046048
+   "lng": 127.046048,
+   "chargers": []
   },
   {
    "statId": "TESLA-6853",
@@ -2298,9 +2344,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.567746,
-   "lng": 127.160203
+   "lng": 127.160203,
+   "chargers": []
   },
   {
    "statId": "TESLA-4346",
@@ -2321,9 +2367,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.637192,
-   "lng": 127.023378
+   "lng": 127.023378,
+   "chargers": []
   },
   {
    "statId": "TESLA-3699",
@@ -2344,9 +2390,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.513534,
-   "lng": 127.106174
+   "lng": 127.106174,
+   "chargers": []
   },
   {
    "statId": "TESLA-6281",
@@ -2367,9 +2413,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V3 12개) 최대 250kW",
-   "chargers": [],
    "lat": 37.532075,
-   "lng": 126.961448
+   "lng": 126.961448,
+   "chargers": []
   },
   {
    "statId": "TESLA-3497",
@@ -2390,9 +2436,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 34.96316,
-   "lng": 127.52554
+   "lng": 127.52554,
+   "chargers": []
   },
   {
    "statId": "TESLA-7366",
@@ -2413,9 +2459,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.345633,
-   "lng": 127.927647
+   "lng": 127.927647,
+   "chargers": []
   },
   {
    "statId": "TESLA-7212",
@@ -2436,9 +2482,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.230118,
-   "lng": 127.297972
+   "lng": 127.297972,
+   "chargers": []
   },
   {
    "statId": "TESLA-7228",
@@ -2459,9 +2505,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V3 12개) 최대 250kW",
-   "chargers": [],
    "lat": 36.615622,
-   "lng": 127.421102
+   "lng": 127.421102,
+   "chargers": []
   },
   {
    "statId": "TESLA-7229",
@@ -2482,9 +2528,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 38.157992,
-   "lng": 128.609508
+   "lng": 128.609508,
+   "chargers": []
   },
   {
    "statId": "TESLA-7656",
@@ -2505,9 +2551,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.230549,
-   "lng": 128.841514
+   "lng": 128.841514,
+   "chargers": []
   },
   {
    "statId": "TESLA-7361",
@@ -2528,9 +2574,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.377561,
-   "lng": 127.105285
+   "lng": 127.105285,
+   "chargers": []
   },
   {
    "statId": "TESLA-7695",
@@ -2551,9 +2597,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 35.820671,
-   "lng": 129.213713
+   "lng": 129.213713,
+   "chargers": []
   },
   {
    "statId": "TESLA-7619",
@@ -2574,9 +2620,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V3 4개) 최대 250kW",
-   "chargers": [],
    "lat": 37.512593,
-   "lng": 126.647902
+   "lng": 126.647902,
+   "chargers": []
   },
   {
    "statId": "TESLA-5052",
@@ -2597,9 +2643,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.1696,
-   "lng": 129.1312
+   "lng": 129.1312,
+   "chargers": []
   },
   {
    "statId": "TESLA-6392",
@@ -2620,9 +2666,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.106825,
-   "lng": 128.966344
+   "lng": 128.966344,
+   "chargers": []
   },
   {
    "statId": "TESLA-5049",
@@ -2643,9 +2689,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.2197,
-   "lng": 129.083
+   "lng": 129.083,
+   "chargers": []
   },
   {
    "statId": "TESLA-5814",
@@ -2666,9 +2712,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.841476,
-   "lng": 127.151105
+   "lng": 127.151105,
+   "chargers": []
   },
   {
    "statId": "TESLA-5054",
@@ -2689,9 +2735,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.961,
-   "lng": 127.8998
+   "lng": 127.8998,
+   "chargers": []
   },
   {
    "statId": "TESLA-5762",
@@ -2712,9 +2758,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.79266,
-   "lng": 128.918971
+   "lng": 128.918971,
+   "chargers": []
   },
   {
    "statId": "TESLA-6583",
@@ -2735,9 +2781,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.617667,
-   "lng": 126.498967
+   "lng": 126.498967,
+   "chargers": []
   },
   {
    "statId": "TESLA-5050",
@@ -2758,9 +2804,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.6327,
-   "lng": 126.8647
+   "lng": 126.8647,
+   "chargers": []
   },
   {
    "statId": "TESLA-5738",
@@ -2781,9 +2827,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.371582,
-   "lng": 126.94568
+   "lng": 126.94568,
+   "chargers": []
   },
   {
    "statId": "TESLA-5048",
@@ -2804,9 +2850,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.6333,
-   "lng": 127.1159
+   "lng": 127.1159,
+   "chargers": []
   },
   {
    "statId": "TESLA-5914",
@@ -2827,9 +2873,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.415567,
-   "lng": 126.882563
+   "lng": 126.882563,
+   "chargers": []
   },
   {
    "statId": "TESLA-6394",
@@ -2850,9 +2896,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.193989,
-   "lng": 127.100422
+   "lng": 127.100422,
+   "chargers": []
   },
   {
    "statId": "TESLA-5764",
@@ -2873,9 +2919,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.439944,
-   "lng": 126.456153
+   "lng": 126.456153,
+   "chargers": []
   },
   {
    "statId": "TESLA-7435",
@@ -2896,9 +2942,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V3 4개) 최대 250kW",
-   "chargers": [],
    "lat": 35.841904,
-   "lng": 127.173897
+   "lng": 127.173897,
+   "chargers": []
   },
   {
    "statId": "TESLA-5751",
@@ -2919,9 +2965,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.727181,
-   "lng": 126.7836
+   "lng": 126.7836,
+   "chargers": []
   },
   {
    "statId": "TESLA-7655",
@@ -2942,9 +2988,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.990885,
-   "lng": 127.085787
+   "lng": 127.085787,
+   "chargers": []
   },
   {
    "statId": "TESLA-5806",
@@ -2965,9 +3011,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 3개 (V3 3개) 최대 250kW",
-   "chargers": [],
    "lat": 37.395436,
-   "lng": 127.110314
+   "lng": 127.110314,
+   "chargers": []
   },
   {
    "statId": "TESLA-5047",
@@ -2988,9 +3034,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.478,
-   "lng": 126.8872
+   "lng": 126.8872,
+   "chargers": []
   },
   {
    "statId": "TESLA-5752",
@@ -3011,9 +3057,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.578525,
-   "lng": 126.894257
+   "lng": 126.894257,
+   "chargers": []
   },
   {
    "statId": "TESLA-5490",
@@ -3034,9 +3080,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.544332,
-   "lng": 127.04416
+   "lng": 127.04416,
+   "chargers": []
   },
   {
    "statId": "TESLA-5053",
@@ -3057,9 +3103,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 38.2081,
-   "lng": 128.5265
+   "lng": 128.5265,
+   "chargers": []
   },
   {
    "statId": "TESLA-7396",
@@ -3080,9 +3126,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.700357,
-   "lng": 127.056056
+   "lng": 127.056056,
+   "chargers": []
   },
   {
    "statId": "TESLA-6621",
@@ -3103,9 +3149,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.577132,
-   "lng": 129.357187
+   "lng": 129.357187,
+   "chargers": []
   },
   {
    "statId": "TESLA-6629",
@@ -3126,9 +3172,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.275137,
-   "lng": 127.212324
+   "lng": 127.212324,
+   "chargers": []
   },
   {
    "statId": "TESLA-9109",
@@ -3149,9 +3195,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 9개 (V3 9개) 최대 250kW",
-   "chargers": [],
    "lat": 37.517491,
-   "lng": 127.033655
+   "lng": 127.033655,
+   "chargers": []
   },
   {
    "statId": "TESLA-3949",
@@ -3172,9 +3218,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.532636,
-   "lng": 126.641587
+   "lng": 126.641587,
+   "chargers": []
   },
   {
    "statId": "TESLA-1396",
@@ -3195,9 +3241,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.80534,
-   "lng": 128.904599
+   "lng": 128.904599,
+   "chargers": []
   },
   {
    "statId": "TESLA-3885",
@@ -3218,9 +3264,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 34.72179,
-   "lng": 127.69945
+   "lng": 127.69945,
+   "chargers": []
   },
   {
    "statId": "TESLA-1806",
@@ -3241,9 +3287,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V2 6개, V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.515931,
-   "lng": 128.1634319
+   "lng": 128.1634319,
+   "chargers": []
   },
   {
    "statId": "TESLA-1911",
@@ -3264,9 +3310,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V2 6개, V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.423696,
-   "lng": 127.419877
+   "lng": 127.419877,
+   "chargers": []
   },
   {
    "statId": "TESLA-3283",
@@ -3287,9 +3333,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.629688,
-   "lng": 126.791093
+   "lng": 126.791093,
+   "chargers": []
   },
   {
    "statId": "TESLA-3284",
@@ -3310,9 +3356,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.240451,
-   "lng": 127.613829
+   "lng": 127.613829,
+   "chargers": []
   },
   {
    "statId": "TESLA-3285",
@@ -3333,9 +3379,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.225032,
-   "lng": 127.123109
+   "lng": 127.123109,
+   "chargers": []
   },
   {
    "statId": "TESLA-3729",
@@ -3356,9 +3402,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.3959939,
-   "lng": 126.663656
+   "lng": 126.663656,
+   "chargers": []
   },
   {
    "statId": "TESLA-3745",
@@ -3379,9 +3425,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 33.492611,
-   "lng": 126.5071
+   "lng": 126.5071,
+   "chargers": []
   },
   {
    "statId": "TESLA-5938",
@@ -3402,9 +3448,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.292913,
-   "lng": 127.659963
+   "lng": 127.659963,
+   "chargers": []
   },
   {
    "statId": "TESLA-5507",
@@ -3425,9 +3471,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.15525,
-   "lng": 128.280846
+   "lng": 128.280846,
+   "chargers": []
   },
   {
    "statId": "TESLA-4291",
@@ -3448,9 +3494,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 34.961728,
-   "lng": 127.565446
+   "lng": 127.565446,
+   "chargers": []
   },
   {
    "statId": "TESLA-5055",
@@ -3471,9 +3517,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.03,
-   "lng": 127.9039
+   "lng": 127.9039,
+   "chargers": []
   },
   {
    "statId": "TESLA-1153",
@@ -3494,9 +3540,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 4개 (V3 4개) 최대 250kW",
-   "chargers": [],
    "lat": 37.52526,
-   "lng": 126.925714
+   "lng": 126.925714,
+   "chargers": []
   },
   {
    "statId": "TESLA-2222",
@@ -3517,9 +3563,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 37.378678,
-   "lng": 126.662796
+   "lng": 126.662796,
+   "chargers": []
   },
   {
    "statId": "TESLA-3886",
@@ -3540,9 +3586,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.34078,
-   "lng": 127.389478
+   "lng": 127.389478,
+   "chargers": []
   },
   {
    "statId": "TESLA-4396",
@@ -3563,9 +3609,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.863274,
-   "lng": 127.748106
+   "lng": 127.748106,
+   "chargers": []
   },
   {
    "statId": "TESLA-4347",
@@ -3586,9 +3632,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 37.529396,
-   "lng": 126.924755
+   "lng": 126.924755,
+   "chargers": []
   },
   {
    "statId": "TESLA-5573",
@@ -3609,9 +3655,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.63068,
-   "lng": 127.303884
+   "lng": 127.303884,
+   "chargers": []
   },
   {
    "statId": "TESLA-6449",
@@ -3632,9 +3678,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.132783,
-   "lng": 128.098612
+   "lng": 128.098612,
+   "chargers": []
   },
   {
    "statId": "TESLA-5574",
@@ -3655,9 +3701,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 36.468663,
-   "lng": 127.267814
+   "lng": 127.267814,
+   "chargers": []
   },
   {
    "statId": "TESLA-5508",
@@ -3678,9 +3724,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 6개 (V3 6개) 최대 250kW",
-   "chargers": [],
    "lat": 35.32755,
-   "lng": 129.011743
+   "lng": 129.011743,
+   "chargers": []
   },
   {
    "statId": "TESLA-4564",
@@ -3701,9 +3747,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 12개 (V3 12개) 최대 250kW",
-   "chargers": [],
    "lat": 35.19304,
-   "lng": 129.21153
+   "lng": 129.21153,
+   "chargers": []
   },
   {
    "statId": "TESLA-5980",
@@ -3724,9 +3770,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 36.985529,
-   "lng": 127.583869
+   "lng": 127.583869,
+   "chargers": []
   },
   {
    "statId": "TESLA-6672",
@@ -3747,9 +3793,9 @@
    "floorNum": "",
    "isTesla": true,
    "teslaSummary": "충전기 8개 (V3 8개) 최대 250kW",
-   "chargers": [],
    "lat": 34.686475,
-   "lng": 126.89945
+   "lng": 126.89945,
+   "chargers": []
   }
  ]
 }
